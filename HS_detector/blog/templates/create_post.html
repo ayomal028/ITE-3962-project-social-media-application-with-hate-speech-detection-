@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="content-section">
+    <form action="" method="POST">
+        {{ form.hidden_tag() }}<!--adds a CSRF token-->
+        <fieldset class="form-group">
+             <legend class="border-bottom mb-4">{{ legend }}</legend>
+             <!-- username -->
+             
+
+             <!-- Title -->
+             <div class="form-group">
+                {{ form.title.label(class="form-control-label") }}
+                {% if form.title.errors %}
+                    {{ form.title(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.title.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <!-- no errors -->
+                    {{ form.title(class="form-control form-control-lg") }}
+                {% endif %} 
+             </div>
+
+             <!-- content -->
+             <div class="form-group">
+                {{ form.content.label(class="form-control-label") }}
+                {% if form.content.errors %}
+                    {{ form.content(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.content.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <!-- no errors -->
+                    {{ form.content(class="form-control form-control-lg") }}
+                {% endif %} 
+             </div>
+             
+        </fieldset>
+
+        <!-- submit post -->
+        <div class="form-group">
+            {{ form.submit(class="btn btn-outline-info")}}
+        </div>
+        
+    </form>
+</div>
+    
+{% endblock content %}

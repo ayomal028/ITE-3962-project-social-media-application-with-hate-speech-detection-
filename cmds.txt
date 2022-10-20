@@ -1,0 +1,25 @@
+.\env\Script\activate
+python app.py
+pip install wtf
+pip list
+
+#extension for login functionality
+pip install flask-login
+
+#testing acc 1
+email - ayomal@gmail.com
+pw - testing
+
+#testing acc 2
+email- testuser@gmail.com
+pw - tester 2
+
+#testing acc new1
+ayomal@gmail.com
+admin1
+
+(env) C:.\..\..\flask app\Flask_blog>set FLASK_APP=run
+(env) C:.\..\..\flask app\Flask_blog>flask shell
+>>> from flaskblog import db
+>>> from flaskblog.models import User, Post
+>>>db.create_all()
