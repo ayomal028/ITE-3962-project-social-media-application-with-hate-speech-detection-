@@ -28,7 +28,7 @@
                             </div>
                         {% else %}
                             <!-- no errors -->
-                            {{ form.username(class="form-control form-control-lg") }}
+                            {{ form.username(class="form-control form-control-md") }}
                         {% endif %}  
                      </div>
     
@@ -44,9 +44,11 @@
                             </div>
                         {% else %}
                             <!-- no errors -->
-                            {{ form.email(class="form-control form-control-lg") }}
+                            {{ form.email(class="form-control form-control-md") }}
                         {% endif %} 
                      </div>
+                     <br>
+                     <br>
                      <!-- Update profile pic -->
                      <div class="form-group">
                         {{ form.picture.label() }}
