@@ -18,6 +18,9 @@ pw - tester 2
 ayomal@gmail.com
 admin1
 
+1k997au.crz@gmail.com
+0987654321
+
 (env) C:.\..\..\flask app\Flask_blog>set FLASK_APP=run
 (env) C:.\..\..\flask app\Flask_blog>flask shell
 >>> from flaskblog import db
