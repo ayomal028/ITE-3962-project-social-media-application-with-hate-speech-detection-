@@ -5,15 +5,15 @@
     <form action="" method="POST">
         {{ form.hidden_tag() }}<!--adds a CSRF token-->
         <fieldset class="form-group">
-             <legend class="border-bottom mb-4">{{ legend }}</legend>
+             <legend class="border-bottom mb-4 font-weight-bold">{{ legend }}</legend>
              <!-- username -->
              
 
              <!-- Title -->
              <div class="form-group">
-                {{ form.title.label(class="form-control-label") }}
+                {{ form.title.label(class="form-control-label font-weight-bold") }}
                 {% if form.title.errors %}
-                    {{ form.title(class="form-control form-control-lg is-invalid") }}
+                    {{ form.title(class="form-control is-invalid") }}
                     <div class="invalid-feedback">
                         {% for error in form.title.errors %}
                             <span>{{ error }}</span>
@@ -21,15 +21,15 @@
                     </div>
                 {% else %}
                     <!-- no errors -->
-                    {{ form.title(class="form-control form-control-lg") }}
+                    {{ form.title(class="form-control") }}
                 {% endif %} 
              </div>
 
              <!-- content -->
              <div class="form-group">
-                {{ form.content.label(class="form-control-label") }}
+                {{ form.content.label(class="form-control-label font-weight-bold") }}
                 {% if form.content.errors %}
-                    {{ form.content(class="form-control form-control-lg is-invalid") }}
+                    {{ form.content(class="form-control is-invalid", rows="10") }}
                     <div class="invalid-feedback">
                         {% for error in form.content.errors %}
                             <span>{{ error }}</span>
@@ -37,7 +37,7 @@
                     </div>
                 {% else %}
                     <!-- no errors -->
-                    {{ form.content(class="form-control form-control-lg") }}
+                    {{ form.content(class="form-control", rows="10") }}
                 {% endif %} 
              </div>
              

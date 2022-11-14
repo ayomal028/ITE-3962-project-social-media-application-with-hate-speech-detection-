@@ -4,14 +4,14 @@
         <form action="" method="POST">
             {{ form.hidden_tag() }}<!--adds a CSRF token-->
             <fieldset class="form-group">
-                 <legend class="border-bottom mb-4">Join Today</legend>
+                 <legend class="border-bottom mb-4 font-weight-bold">Join Today</legend>
                  <!-- username -->
                  <div class="form-group">
-                    {{ form.username.label(class="form-control-label") }}
+                    {{ form.username.label(class="form-control-label font-weight-bold") }}
 
                     <!-- if there are errors in input -->
                     {% if form.username.errors %}
-                        {{ form.username(class="form-control form-control-lg is-invalid") }}
+                        {{ form.username(class="form-control form-control is-invalid") }}
                         <div class="invalid-feedback">
                             {% for error in form.username.errors %}
                                 <span>{{ error }}</span>
@@ -19,15 +19,15 @@
                         </div>
                     {% else %}
                         <!-- no errors -->
-                        {{ form.username(class="form-control form-control-lg") }}
+                        {{ form.username(class="form-control form-control") }}
                     {% endif %}  
                  </div>
 
                  <!-- email -->
                  <div class="form-group">
-                    {{ form.email.label(class="form-control-label") }}
+                    {{ form.email.label(class="form-control-label font-weight-bold") }}
                     {% if form.email.errors %}
-                        {{ form.email(class="form-control form-control-lg is-invalid") }}
+                        {{ form.email(class="form-control form-control is-invalid") }}
                         <div class="invalid-feedback">
                             {% for error in form.email.errors %}
                                 <span>{{ error }}</span>
@@ -35,15 +35,15 @@
                         </div>
                     {% else %}
                         <!-- no errors -->
-                        {{ form.email(class="form-control form-control-lg") }}
+                        {{ form.email(class="form-control form-control") }}
                     {% endif %} 
                  </div>
 
                  <!-- password -->
                  <div class="form-group">
-                    {{ form.password.label(class="form-control-label") }}
+                    {{ form.password.label(class="form-control-label font-weight-bold") }}
                     {% if form.password.errors %}
-                        {{ form.password(class="form-control form-control-lg is-invalid") }}
+                        {{ form.password(class="form-control form-control is-invalid") }}
                         <div class="invalid-feedback">
                             {% for error in form.password.errors %}
                                 <span>{{ error }}</span>
@@ -51,15 +51,15 @@
                         </div>
                     {% else %}
                         <!-- no errors -->
-                        {{ form.password(class="form-control form-control-lg") }}
+                        {{ form.password(class="form-control form-control") }}
                     {% endif %} 
                  </div>
 
                  <!-- confirm password -->
                  <div class="form-group">
-                    {{ form.confirm_password.label(class="form-control-label") }}
+                    {{ form.confirm_password.label(class="form-control-label font-weight-bold") }}
                     {% if form.confirm_password.errors %}
-                        {{ form.confirm_password(class="form-control form-control-lg is-invalid") }}
+                        {{ form.confirm_password(class="form-control form-control is-invalid") }}
                         <div class="invalid-feedback">
                             {% for error in form.confirm_password.errors %}
                                 <span>{{ error }}</span>
@@ -67,7 +67,7 @@
                         </div>
                     {% else %}
                         <!-- no errors -->
-                        {{ form.confirm_password(class="form-control form-control-lg") }}
+                        {{ form.confirm_password(class="form-control form-control") }}
                     {% endif %} 
                  </div>
             </fieldset>
@@ -78,7 +78,7 @@
     </div>
     <div class="border-top pt-3">
         <small class="text-muted">
-            Already have an account?<a href="{{ url_for('login') }}" class="ml-2">Sign In</a>
+            Already have an account?<a href="{{ url_for('users.login') }}" class="ml-2">Sign In</a>
         </small>
     </div>
 {% endblock content %}

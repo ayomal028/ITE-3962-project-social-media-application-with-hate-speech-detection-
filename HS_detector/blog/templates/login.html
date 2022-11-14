@@ -4,15 +4,15 @@
         <form action="" method="POST">
             {{ form.hidden_tag() }}<!--adds a CSRF token-->
             <fieldset class="form-group">
-                 <legend class="border-bottom mb-4">Log In</legend>
+                 <legend class="border-bottom mb-4 font-weight-bold">Log In</legend>
                  <!-- username -->
                  
 
                  <!-- email -->
                  <div class="form-group">
-                    {{ form.email.label(class="form-control-label") }}
+                    {{ form.email.label(class="form-control-label font-weight-bold") }}
                     {% if form.email.errors %}
-                        {{ form.email(class="form-control form-control-lg is-invalid") }}
+                        {{ form.email(class="form-control form-control is-invalid") }}
                         <div class="invalid-feedback">
                             {% for error in form.email.errors %}
                                 <span>{{ error }}</span>
@@ -20,15 +20,15 @@
                         </div>
                     {% else %}
                         <!-- no errors -->
-                        {{ form.email(class="form-control form-control-lg") }}
+                        {{ form.email(class="form-control form-control") }}
                     {% endif %} 
                  </div>
 
                  <!-- password -->
                  <div class="form-group">
-                    {{ form.password.label(class="form-control-label") }}
+                    {{ form.password.label(class="form-control-label font-weight-bold") }}
                     {% if form.password.errors %}
-                        {{ form.password(class="form-control form-control-lg is-invalid") }}
+                        {{ form.password(class="form-control form-control is-invalid") }}
                         <div class="invalid-feedback">
                             {% for error in form.password.errors %}
                                 <span>{{ error }}</span>
@@ -36,7 +36,7 @@
                         </div>
                     {% else %}
                         <!-- no errors -->
-                        {{ form.password(class="form-control form-control-lg") }}
+                        {{ form.password(class="form-control form-control") }}
                     {% endif %} 
                  </div>
 
@@ -50,7 +50,7 @@
             <div class="form-group">
                 {{ form.submit(class="btn btn-outline-info")}}
                 <small class="text-muted ml-2">
-                    <a href="{{ url_for('reset_request') }}">Forgot password?</a>
+                    <a href="{{ url_for('users.reset_request') }}">Forgot password?</a>
                 </small>
             </div>
             
@@ -58,7 +58,7 @@
     </div>
     <div class="border-top pt-3">
         <small class="text-muted">
-            Need an account?<a href="{{ url_for('register') }}" class="ml-2">Sign up Now</a>
+            Need an account?<a href="{{ url_for('users.register') }}" class="ml-2">Sign up Now</a>
         </small>
     </div>
 {% endblock content %}
