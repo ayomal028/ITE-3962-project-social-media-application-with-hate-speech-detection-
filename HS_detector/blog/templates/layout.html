@@ -11,6 +11,7 @@
      <!-- Bootstrap CSS -->
      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
      <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     {% if title %}
         <title>ITE-3962 Project - {{ title }}</title>
@@ -33,6 +34,20 @@
                 <a class="nav-item nav-link" href="{{url_for('main.home')}}">Home</a>
                 <a class="nav-item nav-link" href="{{url_for('main.about')}}">About</a>
               </div>
+
+              <!-- Search bar -->
+              <form action="{{ url_for('users.search') }}" method="POST">
+                {{ form.hidden_tag() }}
+                <div class="input-group">
+                  <div class="form-outline">
+                    <input type="search" name="searched" id="form1" class="form-control" placeholder="search" />
+                  </div>
+                  <button type="submit" class="btn btn-primary btn-search">
+                    <i class="fas fa-search"></i>
+                  </button>
+                </div>
+              </form>
+
               <!-- Navbar Right Side -->
               <div class="navbar-nav">
                 {% if current_user.is_authenticated %} <!-- if logged in display logout on nav bar-->
@@ -63,19 +78,21 @@
             {% endwith %}
             {% block content %}{% endblock %}
           </div>
-          <!-- <div class="col-md-4">
+          <div class="col-md-4">
             <div class="content-section">
-              <h3>Our Sidebar</h3>
-              <p class='text-muted'>You can put any information here you'd like.
+              {% block sidebar %}
+                <h3>Our Sidebar</h3>
+              {% endblock %}
+              <!-- <p class='text-muted'>You can put any information here you'd like.
                 <ul class="list-group">
                   <li class="list-group-item list-group-item-light">Latest Posts</li>
                   <li class="list-group-item list-group-item-light">Announcements</li>
                   <li class="list-group-item list-group-item-light">Calendars</li>
                   <li class="list-group-item list-group-item-light">etc</li>
                 </ul>
-              </p>
+              </p>-->
             </div>
-          </div> -->
+          </div>
         </div>
       </main>
       

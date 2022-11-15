@@ -1,6 +1,6 @@
 from flask import render_template, url_for, flash, redirect, request, Blueprint
 from blog import  db, bcrypt
-from blog.users.forms import RegistrationForm, LoginForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm
+from blog.users.forms import RegistrationForm, LoginForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm, SearchForm
 from blog.models import User, Post
 from flask_login import login_user, current_user, logout_user, login_required
 from blog.users.utils import save_picture, send_reset_email
@@ -115,3 +115,13 @@ def reset_token(token):
         flash(f'Your password has been updated, you can login now', 'success')
         return redirect(url_for('users.login'))
     return render_template('reset_token.html', title='Password Reset', form=form)
+
+
+#search
+@users.route('/search', methods=['POST'])
+def search():
+    form = SearchForm()
+    if form.validate_on_submit():
+        searched = form.searched.data
+        return render_template("search.html", form=form, searched=searched)
+

@@ -23,12 +23,32 @@ body {
   
   .site-header .navbar-nav .nav-link {
     color: #cbd5db;
+    width: max-content;
   }
+
+  .site-header form{
+    margin-left: 5rem;
+    margin-right: 10rem;
+  }
+
+  .site-header .input-group .form-outline .form-control{
+    border-radius: 5rem;
+  }
+
+  .site-header .input-group button{
+    margin-left: 0.5rem;
+    background-color: #f0f0f0;
+    border: none;
+    color: #000000;
+    border-radius: 5rem;
+  }
+  
   
   .site-header .navbar-nav .nav-link:hover {
     background-color: #fffdfd;
     color: #000000;
     font-weight: 500;
+    border-radius: 2.5rem;
   }
 
   .site-header .navbar-nav .nav-link.active {
