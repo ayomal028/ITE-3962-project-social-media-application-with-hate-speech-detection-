@@ -3,7 +3,7 @@ import secrets
 from turtle import pos
 from PIL import Image
 from flask import url_for
-from flask_mail import Message
+# from flask_mail import Message
 from blog import app, mail
 
 #save pictures update account

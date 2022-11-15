@@ -10,6 +10,7 @@
                 <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
             </div>
             <h2><a class="article-title font-weight-bold" href="{{ url_for('posts.post', post_id=post.id)}}">{{ post.title }}</a></h2>
+            <div class="post-pic">{{ post.picture }}</div>
             <p class="article-content">{{ post.content }}</p>
             </div>
         </article>

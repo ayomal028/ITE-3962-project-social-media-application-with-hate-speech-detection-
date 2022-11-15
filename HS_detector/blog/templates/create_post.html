@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<div class="content-section">
+<div class="content-section" enctype="multipart/form-data">
     <form action="" method="POST">
         {{ form.hidden_tag() }}<!--adds a CSRF token-->
         <fieldset class="form-group">
@@ -39,6 +39,17 @@
                     <!-- no errors -->
                     {{ form.content(class="form-control", rows="10") }}
                 {% endif %} 
+             </div>
+
+             <!-- post image -->
+             <div class="form-group">
+                {{ form.picture.label(class="font-weight-bold") }}
+                {{ form.picture(class = "form-control-file") }}
+                {% if form.picture.errors %}
+                    {% for error in form.picture.errors %}
+                        <span class="text-danger">{{ error }}</span><br>
+                    {% endfor %}
+                {% endif %}
              </div>
              
         </fieldset>

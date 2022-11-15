@@ -3,6 +3,7 @@ from blog import db
 from blog.posts.forms import PostForm
 from blog.models import Post
 from flask_login import current_user,login_required
+from blog.users.utils import save_picture
 from flask_mail import Message
 
 posts = Blueprint('posts', __name__)
@@ -13,11 +14,20 @@ posts = Blueprint('posts', __name__)
 def new_post():
     form = PostForm()
     if form.validate_on_submit():
-        post = Post(title=form.title.data, content=form.content.data, author=current_user)
-        db.session.add(post)
-        db.session.commit()
-        flash('Your post has been created!', 'success')
-        return redirect(url_for('posts.posts.home'))
+        if form.picture.data:
+            picture_file = save_picture(form.picture.data)
+            post = Post(title=form.title.data, content=form.content.data, post_image=picture_file, author=current_user)
+            db.session.add(post)
+            db.session.commit()
+            flash('Your post has been created!', 'success')
+            return redirect(url_for('main.home'))
+        else:
+            post = Post(title=form.title.data, content=form.content.data, author=current_user)
+            db.session.add(post)
+            db.session.commit()
+            flash('Your post has been created!', 'success')
+            return redirect(url_for('main.home'))
+    # post_image = url_for('static', filename = 'post_images/' + post.post_image)
     return render_template('create_post.html', title='New Post', form=form, legend='New Post')
 
 #route for view post
@@ -55,4 +65,4 @@ def delete_post(post_id):
     db.session.delete(post)
     db.session.commit()
     flash('Your post has been deleted', 'success')
-    return redirect(url_for('posts.home'))
+    return redirect(url_for('main.home'))
