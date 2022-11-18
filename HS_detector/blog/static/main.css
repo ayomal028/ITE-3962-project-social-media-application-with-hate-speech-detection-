@@ -1,7 +1,7 @@
 body {
     background: #1d1d1d;
     color: #333333;
-    margin-top: 5rem;
+    margin-top: 7rem;
   }
   
   h1, h2, h3, h4, h5, h6 {
@@ -13,7 +13,12 @@ body {
   }
   
   .bg-steel {
-    background-color: #1d1d1d;
+    background-color: #272626;
+  }
+
+  .navbar{
+    height: 5rem;
+    box-shadow: 0 8px 8px 0 rgba(0,0,0,.2);
   }
 
 
@@ -109,6 +114,12 @@ body {
   
   .account-heading {
     font-size: 2.5rem;
+  }
+
+  .sresults{
+    background-color: #ffffff;
+    border-radius: 1rem;
+    padding: 10px 10px;
   }
 
   

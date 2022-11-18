@@ -1,5 +1,25 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1>Your search results</h1>
-    <p> {{ searched }}</p>
+
+    <div class="sresults">
+        <h2>You searched for:</h2>
+        <p> {{ searched }}</p>
+        <br>
+    </div>
+    <br>
+    {% for post in posts %}
+        <article class="media content-section">
+            <img src="{{ url_for('static', filename='profile_pics/' + post.author.image_file)}}" class="rounded-circle article-img" alt="">
+            <div class="media-body">
+            <div class="article-metadata">
+                <!-- link to the user_posts page -->
+                <a class="mr-2" href="{{url_for('users.user_posts', username=post.author.username )}}">{{ post.author.username }}</a>
+                <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+            </div>
+            <h2><a class="article-title font-weight-bold" href="{{ url_for('posts.post', post_id=post.id)}}">{{ post.title }}</a></h2>
+            <!-- <div class="post-pic">{{ post.picture }}</div> -->
+            <p class="article-content">{{ post.content }}</p>
+            </div>
+        </article>
+    {% endfor %}
 {% endblock content %}

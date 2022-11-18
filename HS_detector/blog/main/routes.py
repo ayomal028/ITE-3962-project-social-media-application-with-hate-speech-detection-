@@ -16,7 +16,3 @@ def home():
 def about():
     return render_template('about.html', title='About')
 
-@main.context_processor
-def home():
-    form = SearchForm()
-    return dict(form=form)

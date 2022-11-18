@@ -1,3 +1,4 @@
+from blog import app
 from flask import render_template, url_for, flash, redirect, request, Blueprint
 from blog import  db, bcrypt
 from blog.users.forms import RegistrationForm, LoginForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm, SearchForm
@@ -121,7 +122,16 @@ def reset_token(token):
 @users.route('/search', methods=['POST'])
 def search():
     form = SearchForm()
+    posts = Post.query
     if form.validate_on_submit():
         searched = form.searched.data
-        return render_template("search.html", form=form, searched=searched)
+        #query the database for posts
+        posts = posts.filter(Post.content.like('%' + searched + '%'))
+        posts = posts.order_by(Post.title).all()
+        return render_template("search.html", form=form, searched=searched, posts=posts)
+
+@app.context_processor
+def home():
+    form = SearchForm()
+    return dict(form=form)
 
