@@ -11,7 +11,55 @@
             </div>
             <h2><a class="article-title font-weight-bold" href="{{ url_for('posts.post', post_id=post.id)}}">{{ post.title }}</a></h2>
             <div class="post-pic">{{ post.picture }}</div>
-            <p class="article-content">{{ post.content }}</p>
+            <div><p class="article-content">{{ post.content }}</p></div>
+            <br><hr>
+
+            <!-- display comments -->
+            <!-- {% for comment in post.comments%} {{ comment.text }} {% endfor %} -->
+            <!-- expand/collapse the comments for the specific post -->
+            <div class="collapse" id="comments-{{post.id}}">
+                 <div class="card card-body" id="comments-expanded-{{post.id}}">
+                    {% for comment in post.comments %}
+                        <div class="d-flex flex-start justify-content-between align-items-center">
+                            <div>
+                                <a href="{{url_for('users.user_posts', username=comment.author.username )}}">{{comment.author.username}}</a>: {{comment.text}}
+                            </div>
+                            <div>
+                                <small class="text-muted">{{comment.date_posted.strftime('%Y-%m-%d')}}</small>
+                                <!-- delete comments -->
+                                {% if current_user.id == comment.user_id or current_user.id == post.user_id %}
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown"></button>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                <a href="/delete-comment/{{comment.id}}" class="dropdown-item">delete</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- toggle the comments section -->
+            <p class="card-text">
+                {% if post.comments|length > 0 %}
+                <a data-toggle="collapse" href="#comments-{{post.id}}" role="button" aria-expanded="false">
+                    <small>View {{post.comments|length }} comments</small>
+                </a>     
+                {% else%}
+                <small class="text-muted">No comments to display</small>
+                {% endif %}
+            </p>
+            
+            <br>
+            <!-- add a comment -->
+            <form action="/comment/{{post.id}}" class="input-group mb-3" method="POST">
+                <input type="text" name="text" id="text" class="form-control" placeholder="add your comment here"/>
+                <button type="submit" class="btn btn-primary">Comment</button>
+            </form>
+
             </div>
         </article>
     {% endfor %}

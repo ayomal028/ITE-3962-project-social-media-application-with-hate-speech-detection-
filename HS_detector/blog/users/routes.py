@@ -2,7 +2,7 @@ from blog import app
 from flask import render_template, url_for, flash, redirect, request, Blueprint
 from blog import  db, bcrypt
 from blog.users.forms import RegistrationForm, LoginForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm, SearchForm
-from blog.models import User, Post
+from blog.models import User, Post, Comment
 from flask_login import login_user, current_user, logout_user, login_required
 from blog.users.utils import save_picture, send_reset_email
 from flask_mail import Mail
@@ -134,4 +134,40 @@ def search():
 def home():
     form = SearchForm()
     return dict(form=form)
+
+
+#add comments
+@users.route("/comment/<post_id>", methods =["POST"])
+@login_required
+def comment(post_id):
+    text = request.form.get('text')
+
+    if not text:
+        flash('there seems to be no comment typed', category='error')
+    else:
+        post = Post.query.filter_by(id = post_id)
+        if post:
+            comment = Comment(text = text, author=current_user, post_id=post_id)
+            db.session.add(comment)
+            db.session.commit()
+        else:
+            flash('Post does not exist', category='error')    
+    
+    return redirect(url_for('main.home'))
+
+#delete comments
+@users.route("/delete-comment/<comment_id>")
+@login_required
+def delete_comment(comment_id):
+    comment = Comment.query.filter_by(id=comment_id).first()
+
+    if not comment:
+        flash('there is no such comment', category='error')
+    elif current_user.id != comment.user_id and current_user.id != comment.post.post_id:
+        flash('you do not have permission to delete comments', category='error')
+    else:
+        db.session.delete(comment)
+        db.session.commit()
+    
+    return redirect(url_for('main.home'))
 
