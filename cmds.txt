@@ -26,3 +26,13 @@ admin1
 >>> from flaskblog import db
 >>> from flaskblog.models import User, Post
 >>>db.create_all()
+
+user.query.all()
+user.query.first()
+user.query.filter_by(username='ayomal').first()
+user1 = user.query.filter_by(username='ayomal').first()
+user1.id
+user1.posts  //gets the posts of the user1
+
+post = Post.query.first()  //query the first post
+post.author  //this is what backref attribute does. it lets us access the entire user object who created the post using the post

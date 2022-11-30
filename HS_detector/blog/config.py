@@ -9,3 +9,7 @@ class config:
     MAIL_USERNAME = os.environ.get('EMAIL_USER')
     MAIL_PASSWORD = os.environ.get('EMAIL_PASS')
     SERVER_NAME = "localhost:5000"
+
+
+
+#secret key protect against modifying cookies, cross site request forgery attacks(csrf)

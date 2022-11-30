@@ -9,7 +9,7 @@ from flask_mail import Mail
 
 users = Blueprint('users', __name__)
 
-
+#route for user registration
 @users.route("/register", methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
@@ -25,7 +25,7 @@ def register():
         return redirect(url_for('users.login'))
     return render_template('register.html', title='Register', form=form)
 
-
+#login route
 @users.route("/login", methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -51,7 +51,7 @@ def logout():
     return redirect(url_for('main.home'))
 
 
-
+#route for account page and update account
 @users.route("/account", methods=['GET', 'POST'])
 @login_required #to access the account, a user has to be logged in
 def account():

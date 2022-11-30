@@ -4,7 +4,7 @@ from blog.models import Post
 
 main = Blueprint('main', __name__)
 
-
+@main.route("/")
 @main.route("/home")
 def home():
     page = request.args.get('page', 1, type=int)

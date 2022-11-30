@@ -15,7 +15,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
-    posts = db.relationship('Post', backref='author', lazy=True)
+    posts = db.relationship('Post', backref='author', lazy=True) #posts attribute sets the relationship with the Post table(1 to many)
     comments = db.relationship('Comment', backref='author', lazy=True)
 
     # #setting a secret key with an expiration time and returing a token 
@@ -33,8 +33,8 @@ class User(db.Model, UserMixin):
     #         return None
     #     return User.query.get(user_id)
 
-    # def __repr__(self):
-    #     return f"User('{self.username}', '{self.email}', '{self.image_file}')"
+    def __repr__(self):
+        return f"User('{self.username}', '{self.email}', '{self.image_file}')"
 
 
 class Post(db.Model):
@@ -45,8 +45,6 @@ class Post(db.Model):
     post_image = db.Column(db.String(200), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     comments = db.relationship('Comment', backref='post', lazy=True)
-
-    
 
     def __repr__(self):
         return f"Post('{self.title}', '{self.date_posted}')"
