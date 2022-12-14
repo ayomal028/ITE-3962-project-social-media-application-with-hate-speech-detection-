@@ -6,6 +6,8 @@ from flask_login import current_user,login_required
 from blog.users.utils import save_picture
 from flask_mail import Message
 
+import finalmodel
+
 posts = Blueprint('posts', __name__)
 
 #route for new post
@@ -16,12 +18,13 @@ def new_post():
     if form.validate_on_submit():
         if form.picture.data:
             picture_file = save_picture(form.picture.data)
-            post = Post(title=form.title.data, content=form.content.data, post_image=picture_file, author=current_user)
+            post = Post(title=form.title.data, content= form.content.data, post_image=picture_file, author=current_user)
             db.session.add(post)
             db.session.commit()
             flash('Your post has been created!', 'success')
             return redirect(url_for('main.home'))
         else:
+            
             post = Post(title=form.title.data, content=form.content.data, author=current_user)
             db.session.add(post)
             db.session.commit()
