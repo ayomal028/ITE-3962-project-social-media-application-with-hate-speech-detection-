@@ -10,8 +10,12 @@
                 <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
             </div>
             <h2><a class="article-title font-weight-bold" href="{{ url_for('posts.post', post_id=post.id)}}">{{ post.title }}</a></h2>
-            <div class="post-pic">{{ post.picture }}</div>
-            <div><p class="article-content">{{ post.content }}</p></div>
+            {% if post.post_image %}
+                <div class="post-pic"><img src="{{url_for('static', filename = 'post_images/' + post.post_image)}}" alt="" height="auto" width="500px"></div>
+                <div><p class="article-content">{{ post.content }}</p></div>
+            {% else %}
+                <div><p class="article-content">{{ post.content }}</p></div>
+            {% endif %}
             <br><hr>
 
             <!-- display comments -->

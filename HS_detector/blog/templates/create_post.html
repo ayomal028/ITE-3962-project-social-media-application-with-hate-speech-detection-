@@ -1,8 +1,8 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<div class="content-section" enctype="multipart/form-data">
-    <form action="" method="POST">
+<div class="content-section" >
+    <form action="" method="POST" enctype="multipart/form-data">
         {{ form.hidden_tag() }}<!--adds a CSRF token-->
         <fieldset class="form-group">
              <legend class="border-bottom mb-4 font-weight-bold">{{ legend }}</legend>

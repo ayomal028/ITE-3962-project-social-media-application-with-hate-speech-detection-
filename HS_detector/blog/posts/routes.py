@@ -3,10 +3,11 @@ from blog import db
 from blog.posts.forms import PostForm
 from blog.models import Post
 from flask_login import current_user,login_required
-from blog.users.utils import save_picture
+from blog.posts.utils import save_picture
 from flask_mail import Message
+from blog.finalmodel import get_predictions
 
-import finalmodel
+
 
 posts = Blueprint('posts', __name__)
 
@@ -24,14 +25,30 @@ def new_post():
             flash('Your post has been created!', 'success')
             return redirect(url_for('main.home'))
         else:
-            
-            post = Post(title=form.title.data, content=form.content.data, author=current_user)
-            db.session.add(post)
-            db.session.commit()
-            flash('Your post has been created!', 'success')
+            checktitle = get_predictions(request.form['title'])
+            checkcontent = get_predictions(request.form['content'])
+
+            if(checktitle == "Hate speech" or checkcontent == "Hate speech"):
+                flash("hate!!")
+            elif(checktitle == "Offensive Language" or checkcontent == "Offensive Language"):
+                flash("offensive!")
+                post = Post(checktitle, checkcontent, author=current_user)
+                db.session.add(post)
+                db.session.commit()
+                flash('Your post has been created!', 'success')
+            else:
+                flash("clean")
+                post = Post(title=form.title.data, content=form.content.data, author=current_user)
+                db.session.add(post)
+                db.session.commit()
+                flash('Your post has been created!', 'success')
+            # post = Post(title=form.title.data, content=form.content.data, author=current_user)
+            # db.session.add(post)
+            # db.session.commit()
+            # flash('Your post has been created!', 'success')
             return redirect(url_for('main.home'))
-    # post_image = url_for('static', filename = 'post_images/' + post.post_image)
-    return render_template('create_post.html', title='New Post', form=form, legend='New Post')
+    #photo = url_for('static', filename = 'post_images/' + post.post_image)
+    return render_template('create_post.html',legend="New Post", title="Create a New Post", form=form)
 
 #route for view post
 @posts.route("/post/<int:post_id>")
@@ -50,6 +67,7 @@ def update_post(post_id):
     if form.validate_on_submit():
         post.title = form.title.data
         post.content = form.content.data
+        #post.post_image = form.picture.data
         db.session.commit()
         flash('Your post has been updated', 'success')
         return redirect(url_for('posts.post', post_id=post.id))

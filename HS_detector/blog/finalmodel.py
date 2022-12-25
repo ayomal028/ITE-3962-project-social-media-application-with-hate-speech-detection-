@@ -40,7 +40,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.preprocessing import StandardScaler
 import pickle
 
-filename = 'final_model.sav'
+filename = '../final_model.sav'
 final_model = pickle.load(open(filename, 'rb'))
 
 stopwords = nltk.corpus.stopwords.words("english")
@@ -83,7 +83,7 @@ def preprocess(tweet):
     tokenized_tweet = tweets_lower.apply(lambda x: x.split())
     
     #remove stop words
-    tokenized_tweet = tokenized_tweet.apply(lambda x: [item for item in x if item not in stop_words])
+    tokenized_tweet = tokenized_tweet.apply(lambda x: [item for item in x if item not in stopwords])
     
     #stem the tweet
     tokenized_tweet = tokenized_tweet.apply(lambda x: [stemmer.stem(i) for i in x])
@@ -94,13 +94,17 @@ def preprocess(tweet):
         
     return tweets_pre
 
+preprocessed_tweets = preprocess(tweet)   
+hate_df['preprocessed_tweets'] = preprocessed_tweets
+
 def tfidf_featurs(tweet):
     tweet = pd.Series(tweet)
+    tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 2),max_df=1, min_df=1, max_features=10000)
     tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 2),max_df=0.75, min_df=5, max_features=10000)
     tfidf_vectorizer.fit_transform(hate_df['preprocessed_tweets'])
     tfidf_string = tfidf_vectorizer.transform(tweet)
     tfidf_array = tfidf_string.toarray()
-    return tfidf_array
+    return np.array(tfidf_array)
 
 sentiment_analyzer=VS()
 
@@ -135,10 +139,10 @@ def get_predictions(tweet):
     final_features = np.concatenate([array_tfidf, polarity_scores], axis=1)
     
     #transform features array to a dataframe
-    final_df = pd.DataFrame(final_features)
+    #final_df = pd.DataFrame(final_features)
     
     #apply final model to the input string
-    prediction = final_model.predict(final_df)
+    prediction = final_model.predict(final_features)
     
     if prediction == 0:
         return "Hate speech"
@@ -147,7 +151,5 @@ def get_predictions(tweet):
     elif prediction == 2:
         return "clean"
     else:
-        return "no label"
-        
+        return "no label"   
     return prediction
-
