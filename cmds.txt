@@ -36,3 +36,12 @@ user1.posts  //gets the posts of the user1
 
 post = Post.query.first()  //query the first post
 post.author  //this is what backref attribute does. it lets us access the entire user object who created the post using the post
+
+==================== Admin Account ==================================
+route for admin register = /create_admin
+router for admin dashboard = /admin
+username = Administer
+email = administer@gmail.com
+pw = iamadmin
+
+

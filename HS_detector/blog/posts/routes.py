@@ -42,10 +42,7 @@ def new_post():
                 db.session.add(post)
                 db.session.commit()
                 flash('Your post has been created!', 'success')
-            # post = Post(title=form.title.data, content=form.content.data, author=current_user)
-            # db.session.add(post)
-            # db.session.commit()
-            # flash('Your post has been created!', 'success')
+            
             return redirect(url_for('main.home'))
     #photo = url_for('static', filename = 'post_images/' + post.post_image)
     return render_template('create_post.html',legend="New Post", title="Create a New Post", form=form)

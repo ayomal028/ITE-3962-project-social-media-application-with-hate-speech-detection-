@@ -25,6 +25,19 @@ def register():
         return redirect(url_for('users.login'))
     return render_template('register.html', title='Register', form=form)
 
+#Create an Admin account
+@users.route("/create_admin", methods=['GET', 'POST'])
+def create_admin():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8') #hashing the pw
+        user = User(username=form.username.data, email=form.email.data, password=hashed_password, is_admin=True)
+        db.session.add(user)
+        db.session.commit()
+        flash(f'Admin account has been created! You are now able to login', 'success')
+        return redirect(url_for('users.login'))
+    return render_template('admin_register.html', form=form)
+
 #login route
 @users.route("/login", methods=['GET', 'POST'])
 def login():
