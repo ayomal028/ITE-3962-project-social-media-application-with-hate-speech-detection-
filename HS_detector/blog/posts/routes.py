@@ -28,9 +28,9 @@ def new_post():
             checktitle = get_predictions(request.form['title'])
             checkcontent = get_predictions(request.form['content'])
 
-            if(checktitle == "Hate speech" or checkcontent == "Hate speech"):
+            if(checktitle == 0 or checkcontent == 0):
                 flash("hate!!")
-            elif(checktitle == "Offensive Language" or checkcontent == "Offensive Language"):
+            elif(checktitle == 1 or checkcontent == 1):
                 flash("offensive!")
                 post = Post(checktitle, checkcontent, author=current_user)
                 db.session.add(post)

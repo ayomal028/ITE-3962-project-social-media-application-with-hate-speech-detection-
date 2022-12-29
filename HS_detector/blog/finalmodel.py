@@ -11,7 +11,7 @@ from nltk.corpus import stopwords
 #from textstat.textstat import *
 from sklearn.feature_extraction.text import TfidfVectorizer
 from nltk.sentiment.vader import SentimentIntensityAnalyzer as VS
-nltk.download('vader_lexicon')
+#nltk.download('vader_lexicon')
 from textstat.textstat import textstat
 from wordcloud import WordCloud
 #%matplotlib inline
@@ -40,7 +40,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.preprocessing import StandardScaler
 import pickle
 
-filename = '../final_model.sav'
+filename = '../final_model.pkl'
 final_model = pickle.load(open(filename, 'rb'))
 
 stopwords = nltk.corpus.stopwords.words("english")
@@ -99,7 +99,6 @@ hate_df['preprocessed_tweets'] = preprocessed_tweets
 
 def tfidf_featurs(tweet):
     tweet = pd.Series(tweet)
-    tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 2),max_df=1, min_df=1, max_features=10000)
     tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 2),max_df=0.75, min_df=5, max_features=10000)
     tfidf_vectorizer.fit_transform(hate_df['preprocessed_tweets'])
     tfidf_string = tfidf_vectorizer.transform(tweet)
@@ -137,19 +136,20 @@ def get_predictions(tweet):
     
     #concatenate all the features
     final_features = np.concatenate([array_tfidf, polarity_scores], axis=1)
+    final_f = np.array(final_features)
     
     #transform features array to a dataframe
-    #final_df = pd.DataFrame(final_features)
+    final_df = pd.DataFrame(final_f)
     
     #apply final model to the input string
-    prediction = final_model.predict(final_features)
+    prediction = final_model.predict(final_df)
     
-    if prediction == 0:
-        return "Hate speech"
-    elif prediction == 1:
-        return "Offensive Language"
-    elif prediction == 2:
-        return "clean"
-    else:
-        return "no label"   
+    # if prediction == 0:
+    #     return "Hate speech"
+    # elif prediction == 1:
+    #     return "Offensive Language"
+    # elif prediction == 2:
+    #     return "clean"
+    # else:
+    #     return "no label"   
     return prediction
