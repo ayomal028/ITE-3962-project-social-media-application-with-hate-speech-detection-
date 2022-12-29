@@ -1,31 +1,10 @@
 .\env\Script\activate
-python app.py
-pip install wtf
-pip list
 
-#extension for login functionality
-pip install flask-login
-
-#testing acc 1
-email - ayomal@gmail.com
-pw - testing
-
-#testing acc 2
-email- testuser@gmail.com
-pw - tester 2
-
-#testing acc new1
-ayomal@gmail.com
-admin1
-
-1k997au.crz@gmail.com
-0987654321
-
-(env) C:.\..\..\flask app\Flask_blog>set FLASK_APP=run
-(env) C:.\..\..\flask app\Flask_blog>flask shell
+=================for DB operations===========================
+(env) C:.\..\..\ite-3962 project\hs_detector>set FLASK_APP=run
+(env) C:.\..\..\ite-3962 project\hs_detector>flask shell
 >>> from blog import db
->>> from blog.models import User, Post
->>>db.create_all()
+>>> from blog.models import User, Post, Comment
 
 user.query.all()
 user.query.first()
@@ -36,6 +15,10 @@ user1.posts  //gets the posts of the user1
 
 post = Post.query.first()  //query the first post
 post.author  //this is what backref attribute does. it lets us access the entire user object who created the post using the post
+
+=======testing acc new1=========
+email - ayomal@gmail.com
+pw - admin1
 
 ==================== Admin Account ==================================
 route for admin register = /create_admin
