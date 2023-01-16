@@ -64,6 +64,12 @@ class Comment(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
 
+class Like(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    date_liked = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
+
 class Controller(ModelView):
     def is_accessible(self):
         if current_user.is_authenticated:

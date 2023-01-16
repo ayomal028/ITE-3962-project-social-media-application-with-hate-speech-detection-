@@ -5,6 +5,7 @@ from blog.users.forms import RegistrationForm, LoginForm, UpdateAccountForm, Req
 from blog.models import User, Post, Comment
 from flask_login import login_user, current_user, logout_user, login_required
 from blog.users.utils import save_picture, send_reset_email
+from sqlalchemy import or_, and_
 from flask_mail import Mail
 
 users = Blueprint('users', __name__)
@@ -131,17 +132,34 @@ def reset_token(token):
     return render_template('reset_token.html', title='Password Reset', form=form)
 
 
-#search
+# #search
+# @users.route('/search', methods=['POST'])
+# def search():
+#     form = SearchForm()
+#     posts = Post.query
+#     if form.validate_on_submit():
+#         searched = form.searched.data
+#         #query the database for posts
+#         posts = posts.filter(Post.content.like('%' + searched + '%'))
+#         posts = posts.order_by(Post.title).all()
+#         return render_template("search.html", form=form, searched=searched, posts=posts)
+
+#search function
 @users.route('/search', methods=['POST'])
 def search():
     form = SearchForm()
-    posts = Post.query
+
     if form.validate_on_submit():
-        searched = form.searched.data
-        #query the database for posts
-        posts = posts.filter(Post.content.like('%' + searched + '%'))
-        posts = posts.order_by(Post.title).all()
-        return render_template("search.html", form=form, searched=searched, posts=posts)
+        search_query = form.searched.data
+        posts = Post.query.filter(
+            or_(
+                Post.title.like('%' + search_query + '%'), Post.content.like('%' + search_query + '%')
+            )
+        )
+        users = User.query.filter(
+            User.username.like('%' + search_query + '%')
+        )
+        return render_template('search.html', form=form, posts=posts, users=users, search_query=search_query)
 
 @app.context_processor
 def home():
