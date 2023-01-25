@@ -7,6 +7,6 @@ from wtforms.widgets import TextArea
 
 class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
-    content = TextAreaField('Content', validators=[DataRequired()], widget=TextArea())
+    content = TextAreaField('Content', widget=TextArea())
     picture = FileField('browse', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
     submit = SubmitField('Post')

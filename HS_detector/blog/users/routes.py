@@ -7,6 +7,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from blog.users.utils import save_picture, send_reset_email
 from sqlalchemy import or_, and_
 from flask_mail import Mail
+from blog.finalmodel import get_predictions
 
 users = Blueprint('users', __name__)
 
@@ -178,9 +179,18 @@ def comment(post_id):
     else:
         post = Post.query.filter_by(id = post_id)
         if post:
-            comment = Comment(text = text, author=current_user, post_id=post_id)
-            db.session.add(comment)
-            db.session.commit()
+            comment_txt = get_predictions(text)
+            if comment_txt == 0:
+                flash("It looks like you are trying to submit hateful content. We are strictly against online hate speech", 'danger')
+            elif comment_txt == 1:
+                flash("We strongly recommend not to post offensive content to our platform", 'warning')
+                comment = Comment(text = text, author=current_user, post_id=post_id)
+                db.session.add(comment)
+                db.session.commit()
+            else:
+                comment = Comment(text = text, author=current_user, post_id=post_id)
+                db.session.add(comment)
+                db.session.commit()
         else:
             flash('Post does not exist', category='error')    
     

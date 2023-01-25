@@ -19,31 +19,45 @@ def new_post():
     if form.validate_on_submit():
         if form.picture.data:
             picture_file = save_picture(form.picture.data)
-            post = Post(title=form.title.data, content= form.content.data, post_image=picture_file, author=current_user)
-            db.session.add(post)
-            db.session.commit()
-            flash('Your post has been created!', 'success')
-            return redirect(url_for('main.home'))
+            checktitle = get_predictions(request.form['title'])
+            checkcontent = get_predictions(request.form['content'])
+
+            if(checktitle == 0 or checkcontent == 0):
+                flash("It looks like you are trying to submit hateful content. We are strictly against online hate speech", 'danger')
+            elif(checktitle == 1 or checkcontent == 1):
+                flash("We strongly recommend not to post offensive content to our platform", 'warning')
+                post = Post(title=form.title.data, content=form.content.data, post_image=picture_file, author=current_user, is_offensive=True)
+                db.session.add(post)
+                db.session.commit()
+                flash('Your post has been created!', 'success')
+                return redirect(url_for('main.home'))
+            else:
+                post = Post(title=form.title.data, content=form.content.data, post_image=picture_file, author=current_user, is_clean=True)
+                db.session.add(post)
+                db.session.commit()
+                flash('Your post has been created!', 'success')
+                return redirect(url_for('main.home'))
         else:
             checktitle = get_predictions(request.form['title'])
             checkcontent = get_predictions(request.form['content'])
 
             if(checktitle == 0 or checkcontent == 0):
-                flash("hate!!")
+                flash("It looks like you are trying to submit hateful content. We are strictly against online hate speech", 'danger')
             elif(checktitle == 1 or checkcontent == 1):
-                flash("offensive!")
+                flash("We strongly recommend not to post offensive content to our platform", 'warning')
                 post = Post(title=form.title.data, content=form.content.data, author=current_user)
                 db.session.add(post)
                 db.session.commit()
                 flash('Your post has been created!', 'success')
+                return redirect(url_for('main.home'))
             else:
-                flash("clean")
                 post = Post(title=form.title.data, content=form.content.data, author=current_user)
                 db.session.add(post)
                 db.session.commit()
                 flash('Your post has been created!', 'success')
+                return redirect(url_for('main.home'))
             
-            return redirect(url_for('main.home'))
+        
     #photo = url_for('static', filename = 'post_images/' + post.post_image)
     return render_template('create_post.html',legend="Post Something on BlogWELL", title="Create a New Post", form=form)
 

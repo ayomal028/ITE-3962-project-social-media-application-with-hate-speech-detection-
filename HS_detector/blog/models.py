@@ -53,6 +53,8 @@ class Post(db.Model):
     post_image = db.Column(db.String(200), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     comments = db.relationship('Comment', backref='post', lazy=True)
+    is_offensive = db.Column(db.Boolean, default=False)
+    is_clean = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return f"Post('{self.title}', '{self.date_posted}')"
@@ -87,3 +89,4 @@ class Controller(ModelView):
 admin.add_view(Controller(User, db.session))
 admin.add_view(Controller(Post, db.session))
 admin.add_view(Controller(Comment, db.session))
+admin.add_view(Controller(Like, db.session))
