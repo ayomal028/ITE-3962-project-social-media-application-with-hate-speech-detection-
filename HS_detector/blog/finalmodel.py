@@ -50,85 +50,15 @@ stopwords.extend(exclusions)
 stopwords.remove("not")
 stemmer = PorterStemmer()
 
-hate_df = pd.read_csv("../dataset/Dataset1_labeled_data.csv")
+hate_df = pd.read_csv("../dataset/New_dataset.csv")
 tweet=hate_df.tweet
-
-#preprocess the data in dataset
-def preprocess(tweet):
-    
-    #remove extra spaces
-    regex_pattern = re.compile(r'\s+')
-    tweet_space_removed = tweet.str.replace(regex_pattern, ' ')
-    #remove mentions(@)
-    regex_patten = re.compile(r'@[\w\-]+')
-    tweets = tweet_space_removed.str.replace(regex_patten, '')
-    #remove URLs
-    url_regex = re.compile('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|'
-                           '[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
-    tweets_new = tweets.str.replace(url_regex, '')
-    #remove numbers and punctuations
-    remove_punc_num = tweets_new.str.replace("[^a-zA-Z]", " ")
-    #replace whitespaces with space
-    newtweet = remove_punc_num.str.replace(r'\s+', ' ')
-    #remove leading and trailing whitespaces
-    newtweet = newtweet.str.replace(r'^\s+|\s+?$','')
-    #lowercase
-    tweets_lower = newtweet.str.lower()
-    #tokenize
-    tokenized_tweet = tweets_lower.apply(lambda x: x.split())
-    #remove stop words
-    tokenized_tweet = tokenized_tweet.apply(lambda x: [item for item in x if item not in stopwords])
-    #stem the tweet
-    tokenized_tweet = tokenized_tweet.apply(lambda x: [stemmer.stem(i) for i in x])
-    
-    for i in range(len(tokenized_tweet)):
-        tokenized_tweet[i] = ' '.join(tokenized_tweet[i])
-        tweets_pre = tokenized_tweet 
-    return tweets_pre
-
-preprocessed_tweets = preprocess(tweet)   
-hate_df['preprocessed_tweets'] = preprocessed_tweets
-
-#preprocess the user input
-def preprocess_input(tweet):
-    
-    #remove extra spaces
-    regex_pattern = re.compile(r'\s+')
-    tweet_space_removed = tweet.str.replace(regex_pattern, ' ') 
-    #remove mentions(@)
-    regex_patten = re.compile(r'@[\w\-]+')
-    tweets = tweet_space_removed.str.replace(regex_patten, '')
-    #remove URLs
-    url_regex = re.compile('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|'
-                           '[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
-    tweets_new = tweets.str.replace(url_regex, '')   
-    #remove numbers and punctuations
-    remove_punc_num = tweets_new.str.replace("[^a-zA-Z]", " ") 
-    #replace whitespaces with space
-    newtweet = remove_punc_num.str.replace(r'\s+', ' ')
-    #remove leading and trailing whitespaces
-    newtweet = newtweet.str.replace(r'^\s+|\s+?$','') 
-    #lowercase
-    tweets_lower = newtweet.str.lower()
-    #tokenize
-    tokenized_tweet = tweets_lower.apply(lambda x: x.split()) 
-    #remove stop words
-    tokenized_tweet = tokenized_tweet.apply(lambda x: [item for item in x if item not in stopwords])
-    #stem the tweet
-    tokenized_tweet = tokenized_tweet.apply(lambda x: [stemmer.stem(i) for i in x])
-    
-    for i in range(len(tokenized_tweet)):
-        tokenized_tweet[i] = ' '.join(tokenized_tweet[i])
-        tweets_pre = tokenized_tweet    
-    return tweets_pre
-
 
 
 def tfidf_featurs(tweet):
     tweet = pd.Series(tweet)
     tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 2),max_df=1, min_df=1, max_features=10000)
     tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 2),max_df=0.75, min_df=5, max_features=10000)
-    tfidf_vectorizer.fit_transform(hate_df['preprocessed_tweets'])
+    tfidf_vectorizer.fit_transform(hate_df['preprocessed_tweets'].values.astype('U'))
     tfidf_string = tfidf_vectorizer.transform(tweet)
     tfidf_array = tfidf_string.toarray()
     return tfidf_array
@@ -156,12 +86,9 @@ def get_predictions(user_input):
     #we need to apply this function when the string is not yet pre processed in order to keep the whole meaning
     #of the sentence
     polarity_scores = sentiment_analysis_array(pd_input)
-    
-    #preprocess the input string
-    preprocessed_string = preprocess_input(pd_input)
-    
+     
     #convert input string to a vector array
-    array_tfidf = tfidf_featurs(preprocessed_string)
+    array_tfidf = tfidf_featurs(pd_input)
     
     #concatenate all the features
     final_features = np.concatenate([array_tfidf, polarity_scores], axis=1)
@@ -182,3 +109,125 @@ def get_predictions(user_input):
     # else:
     #     return "no label"   
     return prediction
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # #preprocess the data in dataset
+# def preprocess(tweet):
+    
+#     #remove extra spaces
+#     regex_pattern = re.compile(r'\s+')
+#     tweet_space_removed = tweet.str.replace(regex_pattern, ' ')
+#     #remove mentions(@)
+#     regex_patten = re.compile(r'@[\w\-]+')
+#     tweets = tweet_space_removed.str.replace(regex_patten, '')
+#     #remove URLs
+#     url_regex = re.compile('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|'
+#                            '[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
+#     tweets_new = tweets.str.replace(url_regex, '')
+#     #remove numbers and punctuations
+#     remove_punc_num = tweets_new.str.replace("[^a-zA-Z]", " ")
+#     #replace whitespaces with space
+#     newtweet = remove_punc_num.str.replace(r'\s+', ' ')
+#     #remove leading and trailing whitespaces
+#     newtweet = newtweet.str.replace(r'^\s+|\s+?$','')
+#     #lowercase
+#     tweets_lower = newtweet.str.lower()
+#     #tokenize
+#     tokenized_tweet = tweets_lower.apply(lambda x: x.split())
+#     #remove stop words
+#     tokenized_tweet = tokenized_tweet.apply(lambda x: [item for item in x if item not in stopwords])
+#     #stem the tweet
+#     tokenized_tweet = tokenized_tweet.apply(lambda x: [stemmer.stem(i) for i in x])
+    
+#     for i in range(len(tokenized_tweet)):
+#         tokenized_tweet[i] = ' '.join(tokenized_tweet[i])
+#         tweets_pre = tokenized_tweet 
+#     return tweets_pre
+
+# preprocessed_tweets = preprocess(tweet)   
+# hate_df['preprocessed_tweets'] = preprocessed_tweets
+
+# #preprocess the user input
+# def preprocess_input(tweet):
+    
+#     #remove extra spaces
+#     regex_pattern = re.compile(r'\s+')
+#     tweet_space_removed = tweet.str.replace(regex_pattern, ' ') 
+#     #remove mentions(@)
+#     regex_patten = re.compile(r'@[\w\-]+')
+#     tweets = tweet_space_removed.str.replace(regex_patten, '')
+#     #remove URLs
+#     url_regex = re.compile('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|'
+#                            '[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
+#     tweets_new = tweets.str.replace(url_regex, '')   
+#     #remove numbers and punctuations
+#     remove_punc_num = tweets_new.str.replace("[^a-zA-Z]", " ") 
+#     #replace whitespaces with space
+#     newtweet = remove_punc_num.str.replace(r'\s+', ' ')
+#     #remove leading and trailing whitespaces
+#     newtweet = newtweet.str.replace(r'^\s+|\s+?$','') 
+#     #lowercase
+#     tweets_lower = newtweet.str.lower()
+#     #tokenize
+#     tokenized_tweet = tweets_lower.apply(lambda x: x.split()) 
+#     #remove stop words
+#     tokenized_tweet = tokenized_tweet.apply(lambda x: [item for item in x if item not in stopwords])
+#     #stem the tweet
+#     tokenized_tweet = tokenized_tweet.apply(lambda x: [stemmer.stem(i) for i in x])
+    
+#     for i in range(len(tokenized_tweet)):
+#         tokenized_tweet[i] = ' '.join(tokenized_tweet[i])
+#         tweets_pre = tokenized_tweet    
+#     return tweets_pre

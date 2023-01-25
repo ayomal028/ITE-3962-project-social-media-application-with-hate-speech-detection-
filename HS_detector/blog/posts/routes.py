@@ -32,7 +32,7 @@ def new_post():
                 flash("hate!!")
             elif(checktitle == 1 or checkcontent == 1):
                 flash("offensive!")
-                post = Post(checktitle, checkcontent, author=current_user)
+                post = Post(title=form.title.data, content=form.content.data, author=current_user)
                 db.session.add(post)
                 db.session.commit()
                 flash('Your post has been created!', 'success')
@@ -45,7 +45,7 @@ def new_post():
             
             return redirect(url_for('main.home'))
     #photo = url_for('static', filename = 'post_images/' + post.post_image)
-    return render_template('create_post.html',legend="New Post", title="Create a New Post", form=form)
+    return render_template('create_post.html',legend="Post Something on BlogWELL", title="Create a New Post", form=form)
 
 #route for view post
 @posts.route("/post/<int:post_id>")
