@@ -103,14 +103,15 @@ def user_posts(username):
 #request a email to reset the password
 @users.route("/reset_password", methods=['POST', 'GET'])
 def reset_request():
-    if current_user.is_authenticated:
-        return redirect(url_for('main.home'))
+    # if current_user.is_authenticated:
+    #     return redirect(url_for('main.home'))
     form = RequestResetForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        send_reset_email(user)
-        flash('An email has been sent to reset your password', 'info')
-        return redirect(url_for('users.login'))
+        if user:
+            send_reset_email(user)
+            flash('An email has been sent to reset your password', 'info')
+            return redirect(url_for('users.login'))
     return render_template('reset_request.html', title='Password Reset', form=form)
 
 #actual reset password
@@ -122,15 +123,15 @@ def reset_token(token):
     if user is None:
         flash('That is an invalid or expired token', 'warning')
         return redirect(url_for('users.reset_request'))
+
     form = ResetPasswordForm()
     if form.validate_on_submit():
-        #adding a user to db throgh reg form
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8') #hashing the pw
         user.password = hashed_password
         db.session.commit()
         flash(f'Your password has been updated, you can login now', 'success')
         return redirect(url_for('users.login'))
-    return render_template('reset_token.html', title='Password Reset', form=form)
+    return render_template('change_password.html', title='Password Reset', form=form)
 
 
 # #search
@@ -211,4 +212,7 @@ def delete_comment(comment_id):
         db.session.commit()
     
     return redirect(url_for('main.home'))
+
+
+
 

@@ -1,6 +1,7 @@
 # from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import abort
-from datetime import datetime
+from itsdangerous.url_safe import URLSafeTimedSerializer as Serializer
+from datetime import datetime, timedelta
 from blog import db, login_manager, app
 from flask_login import UserMixin, current_user
 from flask_admin import Admin
@@ -26,20 +27,21 @@ class User(db.Model, UserMixin):
     comments = db.relationship('Comment', backref='author', lazy=True)
     is_admin = db.Column(db.Boolean, default=False)
 
-    # #setting a secret key with an expiration time and returing a token 
-    # def get_reset_token(self, expires_sec=1800):
-    #     s= Serializer(app.config['SECRET_KEY'], expires_sec)
-    #     return s.dumps({'user_id': self.id}).decode('utf-8')
+    #setting a secret key with an expiration time and returing a token 
+    def get_reset_token(self, expires_sec=1800):
+         s= Serializer(app.config['SECRET_KEY'], expires_sec)
+         return s.dumps({'user_id':self.id}).decode('utf-8')
 
-    # # verify the pw reset token and creates a serializer and load the token and returns the user id
-    # @staticmethod
-    # def verify_reset_token(token):
-    #     s= Serializer(app.config['SECRET_KEY'])
-    #     try:
-    #         user_id = s.loads(token)['user_id']
-    #     except:
-    #         return None
-    #     return User.query.get(user_id)
+    #verify the pw reset token and creates a serializer and load the token and returns the user id
+    @staticmethod
+    def verify_reset_token(token):
+        s= Serializer(app.config['SECRET_KEY'])
+        #using try/catch because if the user with this token does not exist, it will crash the server. we dont want that to happen
+        try:
+            user_id = s.loads(token)['user_id']
+        except:
+            return None
+        return User.query.get(user_id)
 
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.image_file}')"

@@ -68,6 +68,7 @@ class RequestResetForm(FlaskForm):
             raise ValidationError('There is no account with that email!')
 
 class ResetPasswordForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Reset Password')

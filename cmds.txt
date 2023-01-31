@@ -28,3 +28,19 @@ email = administer@gmail.com
 pw = iamadmin
 
 
+
+*************rest password utils*************
+from itsdangerous.url_safe import URLSafeTimedSerializer as Serializer
+serial=Serializer(app.config['SECRET_KEY'])
+token=serial.dumps({'user_id':2})
+serial.loads(token)
+
+**********tester gmail account*********
+pw-thisistester
+email- ayomal.test@gmail.com
+
+********valid tester account*******
+ayomal.test@gmail.com
+testerlegit
+
+
