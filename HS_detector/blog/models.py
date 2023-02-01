@@ -1,9 +1,10 @@
 # from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import abort
 from itsdangerous.url_safe import URLSafeTimedSerializer as Serializer
-from datetime import datetime, timedelta
+from datetime import datetime
 from blog import db, login_manager, app
 from flask_login import UserMixin, current_user
+from sqlalchemy import CheckConstraint
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 
@@ -26,6 +27,7 @@ class User(db.Model, UserMixin):
     #posts attribute sets the relationship with the Post table(1 to many)
     comments = db.relationship('Comment', backref='author', lazy=True)
     is_admin = db.Column(db.Boolean, default=False)
+    likes = db.relationship('Like', backref='author', lazy=True)
 
     #setting a secret key with an expiration time and returing a token 
     def get_reset_token(self, expires_sec=1800):
@@ -48,6 +50,7 @@ class User(db.Model, UserMixin):
 
 
 class Post(db.Model):
+    __table_args__ = (CheckConstraint('hate_percentage >= 0.0 and hate_percentage <= 1.0'),)
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
@@ -55,8 +58,10 @@ class Post(db.Model):
     post_image = db.Column(db.String(200), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     comments = db.relationship('Comment', backref='post', lazy=True)
-    is_offensive = db.Column(db.Boolean, default=False)
-    is_clean = db.Column(db.Boolean, default=False)
+    # is_offensive = db.Column(db.Boolean, default=False)
+    # is_clean = db.Column(db.Boolean, default=False)
+    likes = db.relationship('Like', backref='Post', lazy=True)
+    hate_percentage = db.Column(db.Float, nullable=False, server_default='0.0')
 
     def __repr__(self):
         return f"Post('{self.title}', '{self.date_posted}')"

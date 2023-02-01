@@ -2,7 +2,7 @@ from blog import app
 from flask import render_template, url_for, flash, redirect, request, Blueprint
 from blog import  db, bcrypt
 from blog.users.forms import RegistrationForm, LoginForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm, SearchForm
-from blog.models import User, Post, Comment
+from blog.models import User, Post, Comment, Like
 from flask_login import login_user, current_user, logout_user, login_required
 from blog.users.utils import save_picture, send_reset_email
 from sqlalchemy import or_, and_
@@ -98,7 +98,15 @@ def user_posts(username):
         .paginate(page=page, per_page=5)#pagination and post order
     return render_template('user_posts.html', posts=posts, user=user)
 
-
+#show all posts of the current user
+@users.route("/user/<string:username>")
+def my_posts(current_user):
+    page = request.args.get('page', 1, type=int)
+    user = User.query.filter_by(username=current_user).first_or_404()
+    posts = Post.query.filter_by(author=user)\
+        .order_by(Post.date_posted.desc())\
+        .paginate(page=page, per_page=5)#pagination and post order
+    return render_template('my_content.html', posts=posts, user=user)
 
 #request a email to reset the password
 @users.route("/reset_password", methods=['POST', 'GET'])
@@ -212,6 +220,26 @@ def delete_comment(comment_id):
         db.session.commit()
     
     return redirect(url_for('main.home'))
+
+#Like posts
+@users.route("/like-post/<post_id>", methods =["GET"] )
+@login_required
+def like(post_id):
+    post = Post.query.filter_by(id=post_id)
+    like = Like.query.filter_by(author=current_user, post_id=post_id).first()
+
+    if not post:
+        flash('Post does not exists', 'warning')
+    elif like:
+        db.session.delete(like)
+        db.session.commit()
+    else:
+        like = Like(author=current_user, post_id=post_id)
+        db.session.add(like)
+        db.session.commit()
+
+    return redirect(url_for('main.home'))
+
 
 
 

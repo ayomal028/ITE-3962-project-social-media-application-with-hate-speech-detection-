@@ -6,7 +6,7 @@
             <div class="media-body">
             <div class="article-metadata">
                 <!-- link to the user_posts page -->
-                <a class="mr-2" href="{{url_for('users.user_posts', username=post.author.username )}}">{{ post.author.username }}</a>
+                <a class="mr-2 uname" href="{{url_for('users.user_posts', username=post.author.username )}}">{{ post.author.username }}</a>
                 <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
             </div>
             <h2><a class="article-title font-weight-bold" href="{{ url_for('posts.post', post_id=post.id)}}">{{ post.title }}</a></h2>
@@ -18,22 +18,34 @@
             {% endif %}
             <br><hr>
 
+
+             <!-- like button -->
+             <div>
+                {{post.likes|length}}
+                {% if current_user in post.likes|map(attribute="author")|list %}
+                    <a href="/like-post/{{post.id}}"><i class="fa-solid fa-thumbs-up"></i></a>
+                {% else %}
+                    <a href="/like-post/{{post.id}}"><i class="fa-regular fa-thumbs-up"></i></a> 
+                {% endif %}
+            </div>
+
             <!-- display comments -->
-            <!-- {% for comment in post.comments%} {{ comment.text }} {% endfor %} -->
             <!-- expand/collapse the comments for the specific post -->
             <div class="collapse" id="comments-{{post.id}}">
                  <div class="card card-body" id="comments-expanded-{{post.id}}">
                     {% for comment in post.comments %}
                         <div class="d-flex flex-start justify-content-between align-items-center">
                             <div>
-                                <a href="{{url_for('users.user_posts', username=comment.author.username )}}">{{comment.author.username}}</a>: {{comment.text}}
+                                <a href="{{url_for('users.user_posts', username=comment.author.username )}}" class="uname">{{comment.author.username}}</a>: {{comment.text}}
                             </div>
                             <div>
                                 <small class="text-muted">{{comment.date_posted.strftime('%Y-%m-%d')}}</small>
                                 <!-- delete comments -->
                                 {% if current_user.id == comment.user_id or current_user.id == post.user_id %}
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown"></button>
+                                        <a href="#" style="width: 20px; height: 20px;" style="border: 2px solid black;"  data-toggle="dropdown" >
+                                            <i class="fa-regular fa-trash-can"></i>
+                                        </a>
                                         <ul class="dropdown-menu">
                                             <li>
                                                 <a href="/delete-comment/{{comment.id}}" class="dropdown-item">delete</a>
@@ -46,6 +58,8 @@
                     {% endfor %}
                 </div>
             </div>
+
+           
             <!-- toggle the comments section -->
             <p class="card-text">
                 {% if post.comments|length > 0 %}
@@ -58,10 +72,14 @@
             </p>
             
             <br>
-            <!-- add a comment -->
+            <!-- add a comment form -->
             <form action="/comment/{{post.id}}" class="input-group mb-3" method="POST">
-                <input type="text" name="text" id="text" class="form-control" placeholder="add your comment here"/>
-                <button type="submit" class="btn btn-primary">Comment</button>
+                <div class="mr-2">
+                    <input type="text" name="text" id="text" class="form-control" placeholder="add your comment here" style="width: 500px;"/>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-rounded" style="border: 2px solid black;"><i class="fa-solid fa-paper-plane"></i></button>
+                </div>
             </form>
 
             </div>
@@ -69,16 +87,16 @@
     {% endfor %}
 
     <div class="pagi_btn text-center">
-    {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
-        {% if page_num %}
-            {% if posts.page == page_num %}
-                <a href="{{ url_for('main.home', page=page_num )}}" class="btn btn-info mb-4">{{ page_num }}</a>
+        {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+            {% if page_num %}
+                {% if posts.page == page_num %}
+                    <a href="{{ url_for('main.home', page=page_num )}}" class="btn btn-info mb-4">{{ page_num }}</a>
+                {% else %}
+                    <a href="{{ url_for('main.home', page=page_num )}}" class="btn btn-outline-info mb-4">{{ page_num }}</a>
+                {% endif %}
             {% else %}
-                <a href="{{ url_for('main.home', page=page_num )}}" class="btn btn-outline-info mb-4">{{ page_num }}</a>
             {% endif %}
-        {% else %}
-        {% endif %}
-    {% endfor %}
+        {% endfor %}
     </div>
 
 {% endblock content %}

@@ -1,13 +1,24 @@
 {% extends "layout.html" %}
 {% block content %}
     <div class="content-section">
-        <div class="media">
-        <img class="rounded-circle account-img" src="{{ image_file }}">
-        <div class="media-body">
-            <h2 class="account-heading">{{ current_user.username }}</h2>
-            <p class="text-secondary">{{ current_user.email }}</p>
+        <div class="d-flex justify-content-between">
+            <div class="media">
+                <div class="d-flex">
+                    <div class="d-flex">
+                        <img class="rounded-circle account-img" src="{{ image_file }}">
+                        <div class="media-body">
+                            <h2 class="account-heading">{{ current_user.username }}</h2>
+                            <p class="text-secondary">{{ current_user.email }}</p>
+                        </div>
+                    </div>
+                </div> 
+            </div>
+            <div class="">
+                <i class="fa-regular fa-rectangle-list"></i>
+                <a href="{{url_for('users.my_posts', username=current_user.username)}}">My Content</a>
+            </div>
         </div>
-        </div>
+        
 
         
             <form action="" method="POST" enctype="multipart/form-data">
@@ -60,8 +71,8 @@
                         {% endif %}
                      </div>
                 </fieldset>
-                <div class="form-group">
-                    {{ form.submit(class="btn btn-outline-info")}}
+                <div class="form-group mx-auto">
+                    {{ form.submit(class="btn btn btn-dark")}}
                 </div>
             </form>
         

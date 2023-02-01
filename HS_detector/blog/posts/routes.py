@@ -26,13 +26,13 @@ def new_post():
                 flash("It looks like you are trying to submit hateful content. We are strictly against online hate speech", 'danger')
             elif(checktitle == 1 or checkcontent == 1):
                 flash("We strongly recommend not to post offensive content to our platform", 'warning')
-                post = Post(title=form.title.data, content=form.content.data, post_image=picture_file, author=current_user, is_offensive=True)
+                post = Post(title=form.title.data, content=form.content.data, post_image=picture_file, author=current_user)
                 db.session.add(post)
                 db.session.commit()
                 flash('Your post has been created!', 'success')
                 return redirect(url_for('main.home'))
             else:
-                post = Post(title=form.title.data, content=form.content.data, post_image=picture_file, author=current_user, is_clean=True)
+                post = Post(title=form.title.data, content=form.content.data, post_image=picture_file, author=current_user)
                 db.session.add(post)
                 db.session.commit()
                 flash('Your post has been created!', 'success')

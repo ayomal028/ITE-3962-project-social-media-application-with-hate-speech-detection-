@@ -8,6 +8,14 @@ body {
     color: #444444;
   }
 
+  a {
+    color: rgb(23, 23, 23);
+  }
+
+  .uname{
+    font-weight: 600;
+  }
+
   .title{
     color: #f0f0f0;
   }
@@ -122,4 +130,7 @@ body {
     padding: 10px 10px;
   }
 
+.btn-outline-info{
+  color: black;
+}
   
