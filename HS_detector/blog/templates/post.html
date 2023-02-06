@@ -3,18 +3,24 @@
     <article class="media content-section">
         <img src="{{ url_for('static', filename='profile_pics/' + post.author.image_file)}}" class="rounded-circle article-img" alt="">
         <div class="media-body">
-            <div class="article-metadata">
-                <!-- link to the user_posts page -->
-                <a class="mr-2 uname" href="{{url_for('users.user_posts', username=post.author.username )}}" >{{ post.author.username }}</a>
-                <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
-                <!-- update and delete -->
-                {% if post.author == current_user %}
-                    <div>
-                        <a href="{{ url_for('posts.update_post', post_id=post.id) }}" class="btn btn-secondary btn-sm mt-1 mb-1">Edit</a>
-                        <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
-                    </div>
-                {% endif %}
+            <div class="d-flex justify-content-between">
+                <div class="article-metadata">
+                    <!-- link to the user_posts page -->
+                    <a class="mr-2 uname" href="{{url_for('users.user_posts', username=post.author.username )}}" >{{ post.author.username }}</a>
+                    <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+                    <!-- update and delete -->
+                    {% if post.author == current_user %}
+                        <div>
+                            <a href="{{ url_for('posts.update_post', post_id=post.id) }}" class="btn btn-secondary btn-sm mt-1 mb-1">Edit</a>
+                            <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
+                        </div>
+                    {% endif %}
+                </div>
+                <div>
+                    <input type="button" value="report" data-toggle="modal" data-target="#reportModal">
+                </div>
             </div>
+            
             <h2 class="article-title font-weight-bold">{{ post.title }}</a></h2>
             {% if post.post_image %}
                 <div class="post-pic"><img src="{{url_for('static', filename = 'post_images/' + post.post_image)}}" alt="" height="auto" width="500px"></div>
@@ -102,6 +108,43 @@
             <button type="button" class="btn btn-secondary" data-dismiss="modal">cancel</button>
             <form action="{{ url_for('posts.delete_post', post_id=post.id) }}" method="POST">
                 <input type="submit" class="btn btn-danger" value="Delete">
+            </form>
+            </div>
+        </div>
+        </div>
+    </div>
+
+        <!-- Report post modal -->
+    <div class="modal" tabindex="-1" role="dialog" id="reportModal">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title">Report Post</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <!-- Report form -->
+            <form action="{{url_for('posts.report_post', post_id=post.id)}}" method="post">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    <div class="form-check">
+                        <input type="radio" name="reaseon" id="Hate_speech">
+                        <label for="Hate_speech">Hate Speech</label><br>
+                        <input type="radio" name="reaseon" id="false">
+                        <label for="false">False Information</label><br>
+                        <input type="radio" name="reaseon" id="violance">
+                        <label for="violance">Violance</label>
+                    </div>
+                    <div class="form-description">
+                        <input type="text" class="form-control" name="description" id="description" placeholder="Describe the situation(Optional)">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Report</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
             </form>
             </div>
         </div>

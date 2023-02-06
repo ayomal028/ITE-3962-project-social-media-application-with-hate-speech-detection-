@@ -1,7 +1,7 @@
 from flask import render_template, url_for, flash, redirect, request,abort,Blueprint
 from blog import db
 from blog.posts.forms import PostForm
-from blog.models import Post
+from blog.models import Post, Reports
 from flask_login import current_user,login_required
 from blog.posts.utils import save_picture
 from flask_mail import Message
@@ -98,3 +98,20 @@ def delete_post(post_id):
     db.session.commit()
     flash('Your post has been deleted', 'success')
     return redirect(url_for('main.home'))
+
+@posts.route('/post/<int:post_id>/report', methods=['GET', 'POST'])
+@login_required
+def report_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    reason = request.form.get('reaseon')
+    description = request.form.get('description')
+
+    if post:
+        report = Reports(author=current_user, post_id=post_id, reason=reason, description=description)
+        db.session.add(report)
+        db.session.commit()
+        flash('Your report was sent successfully. We will take the necessary action', 'success')
+    else:
+        flash('post does not exist', category='error')
+    
+    return redirect(url_for('posts.post'))

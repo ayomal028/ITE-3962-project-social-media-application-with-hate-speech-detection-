@@ -80,6 +80,15 @@ class Like(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
 
+class Reports(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    date_reported = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
+    reason = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    
+
 class Controller(ModelView):
     def is_accessible(self):
         if current_user.is_authenticated:
@@ -97,3 +106,4 @@ admin.add_view(Controller(User, db.session))
 admin.add_view(Controller(Post, db.session))
 admin.add_view(Controller(Comment, db.session))
 admin.add_view(Controller(Like, db.session))
+admin.add_view(Controller(Reports, db.session))
