@@ -28,6 +28,7 @@ class User(db.Model, UserMixin):
     comments = db.relationship('Comment', backref='author', lazy=True)
     is_admin = db.Column(db.Boolean, default=False)
     likes = db.relationship('Like', backref='author', lazy=True)
+    reports = db.relationship('Reports', backref='author', lazy=True)
 
     #setting a secret key with an expiration time and returing a token 
     def get_reset_token(self, expires_sec=1800):
@@ -62,6 +63,7 @@ class Post(db.Model):
     # is_clean = db.Column(db.Boolean, default=False)
     likes = db.relationship('Like', backref='Post', lazy=True)
     hate_percentage = db.Column(db.Float, nullable=False, server_default='0.0')
+    reports = db.relationship('Reports', backref='Post', lazy=True)
 
     def __repr__(self):
         return f"Post('{self.title}', '{self.date_posted}')"

@@ -17,7 +17,9 @@
                     {% endif %}
                 </div>
                 <div>
-                    <input type="button" value="report" data-toggle="modal" data-target="#reportModal">
+                    <!-- <input type="button" value="report" data-toggle="modal" data-target="#reportModal">data-toggle="modal" data-target="#reportModal"</i>
+                    <button data-toggle="modal" data-target="#reportModal"><i class="fa-solid fa-circle-exclamation"></i></button> -->
+                    <a href="#" data-toggle="modal" data-target="#reportModal"><i class="fa-solid fa-circle-exclamation"></i></a>
                 </div>
             </div>
             
@@ -130,11 +132,11 @@
                 {{ form.hidden_tag() }}
                 <div class="form-group">
                     <div class="form-check">
-                        <input type="radio" name="reaseon" id="Hate_speech">
+                        <input type="radio" name="reason" id="Hate_speech" value="Hate Speech">
                         <label for="Hate_speech">Hate Speech</label><br>
-                        <input type="radio" name="reaseon" id="false">
+                        <input type="radio" name="reason" id="false" value="False Information">
                         <label for="false">False Information</label><br>
-                        <input type="radio" name="reaseon" id="violance">
+                        <input type="radio" name="reason" id="violance" value="Violance">
                         <label for="violance">Violance</label>
                     </div>
                     <div class="form-description">

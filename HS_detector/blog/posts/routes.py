@@ -103,7 +103,7 @@ def delete_post(post_id):
 @login_required
 def report_post(post_id):
     post = Post.query.get_or_404(post_id)
-    reason = request.form.get('reaseon')
+    reason = request.form.get('reason')
     description = request.form.get('description')
 
     if post:
@@ -114,4 +114,4 @@ def report_post(post_id):
     else:
         flash('post does not exist', category='error')
     
-    return redirect(url_for('posts.post'))
+    return redirect(url_for('posts.post', post_id=post_id))
