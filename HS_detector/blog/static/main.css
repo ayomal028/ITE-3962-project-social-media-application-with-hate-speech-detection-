@@ -133,4 +133,8 @@ body {
 .btn-outline-info{
   color: black;
 }
+
+.fa-thumbs-up{
+  cursor: pointer;
+}
   

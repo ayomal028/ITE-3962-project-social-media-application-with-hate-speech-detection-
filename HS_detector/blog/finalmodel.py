@@ -16,6 +16,11 @@ from textstat.textstat import textstat
 from wordcloud import WordCloud
 #%matplotlib inline
 from matplotlib import pyplot as plt
+
+from PIL import Image
+import cv2
+from matplotlib import pyplot as plt
+import pytesseract
 # from PIL import Image
 # from gensim.test.utils import common_texts
 # import seaborn
@@ -53,7 +58,7 @@ stemmer = PorterStemmer()
 hate_df = pd.read_csv("../dataset/New_dataset.csv")
 tweet=hate_df.tweet
 
-
+#tf-idf
 def tfidf_featurs(tweet):
     tweet = pd.Series(tweet)
     tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 2),max_df=1, min_df=1, max_features=10000)
@@ -63,7 +68,7 @@ def tfidf_featurs(tweet):
     tfidf_array = tfidf_string.toarray()
     return tfidf_array
 
-
+#polarity scores
 def sentiment_analysis_string(tweet):
     sentiment = sentiment_analyzer.polarity_scores(tweet)
     features = [sentiment['neg'], sentiment['pos'], sentiment['neu'], sentiment['compound']]
@@ -75,8 +80,44 @@ def sentiment_analysis_array(tweets):
         features.append(sentiment_analysis_string(t))
     return np.array(features)
 
+#binarize image
+def binarize(image):
+    gray_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) #convert to grayscale
+    thresh, im_bw = cv2.threshold(gray_img, 200, 250, cv2.THRESH_BINARY) #convert to b&w
+    return im_bw
+
+#remove noise
+def noise_removal(image):
+    kernal = np.ones((1, 1), np.uint8)
+    image = cv2.dilate(image, kernal, iterations=1)
+    kernal = np.ones((1,1), np.uint8)
+    image = cv2.erode(image, kernal, iterations=1)
+    image = cv2.morphologyEx(image, cv2.MORPH_CLOSE, kernal)
+    #image = cv2.medianBlur(image, 3)
+    return (image)
+
+#remove borders
+def remove_borders(image):
+    contours, heiarchy = cv2.findContours(image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    cntsSorted = sorted(contours, key=lambda x:cv2.contourArea(x))
+    cnt = cntsSorted[-1]
+    x, y, w, h = cv2.boundingRect(cnt)
+    crop = image[y:y+h, x:x+w]
+    return (crop)
+
+#get text from image
+def ocr(image):
+    img = cv2.imread(image)
+    binary = binarize(img)
+    denoised = noise_removal(binary)
+    b_removed = remove_borders(denoised)
+    
+    ocr_result = pytesseract.image_to_string(img)
+    processed_text = ' '.join(ocr_result.split())
+    return processed_text
 
 
+#get the predictions
 def get_predictions(user_input):
     
     #convert the input string to a panda series
@@ -111,123 +152,3 @@ def get_predictions(user_input):
     return prediction
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # #preprocess the data in dataset
-# def preprocess(tweet):
-    
-#     #remove extra spaces
-#     regex_pattern = re.compile(r'\s+')
-#     tweet_space_removed = tweet.str.replace(regex_pattern, ' ')
-#     #remove mentions(@)
-#     regex_patten = re.compile(r'@[\w\-]+')
-#     tweets = tweet_space_removed.str.replace(regex_patten, '')
-#     #remove URLs
-#     url_regex = re.compile('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|'
-#                            '[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
-#     tweets_new = tweets.str.replace(url_regex, '')
-#     #remove numbers and punctuations
-#     remove_punc_num = tweets_new.str.replace("[^a-zA-Z]", " ")
-#     #replace whitespaces with space
-#     newtweet = remove_punc_num.str.replace(r'\s+', ' ')
-#     #remove leading and trailing whitespaces
-#     newtweet = newtweet.str.replace(r'^\s+|\s+?$','')
-#     #lowercase
-#     tweets_lower = newtweet.str.lower()
-#     #tokenize
-#     tokenized_tweet = tweets_lower.apply(lambda x: x.split())
-#     #remove stop words
-#     tokenized_tweet = tokenized_tweet.apply(lambda x: [item for item in x if item not in stopwords])
-#     #stem the tweet
-#     tokenized_tweet = tokenized_tweet.apply(lambda x: [stemmer.stem(i) for i in x])
-    
-#     for i in range(len(tokenized_tweet)):
-#         tokenized_tweet[i] = ' '.join(tokenized_tweet[i])
-#         tweets_pre = tokenized_tweet 
-#     return tweets_pre
-
-# preprocessed_tweets = preprocess(tweet)   
-# hate_df['preprocessed_tweets'] = preprocessed_tweets
-
-# #preprocess the user input
-# def preprocess_input(tweet):
-    
-#     #remove extra spaces
-#     regex_pattern = re.compile(r'\s+')
-#     tweet_space_removed = tweet.str.replace(regex_pattern, ' ') 
-#     #remove mentions(@)
-#     regex_patten = re.compile(r'@[\w\-]+')
-#     tweets = tweet_space_removed.str.replace(regex_patten, '')
-#     #remove URLs
-#     url_regex = re.compile('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|'
-#                            '[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
-#     tweets_new = tweets.str.replace(url_regex, '')   
-#     #remove numbers and punctuations
-#     remove_punc_num = tweets_new.str.replace("[^a-zA-Z]", " ") 
-#     #replace whitespaces with space
-#     newtweet = remove_punc_num.str.replace(r'\s+', ' ')
-#     #remove leading and trailing whitespaces
-#     newtweet = newtweet.str.replace(r'^\s+|\s+?$','') 
-#     #lowercase
-#     tweets_lower = newtweet.str.lower()
-#     #tokenize
-#     tokenized_tweet = tweets_lower.apply(lambda x: x.split()) 
-#     #remove stop words
-#     tokenized_tweet = tokenized_tweet.apply(lambda x: [item for item in x if item not in stopwords])
-#     #stem the tweet
-#     tokenized_tweet = tokenized_tweet.apply(lambda x: [stemmer.stem(i) for i in x])
-    
-#     for i in range(len(tokenized_tweet)):
-#         tokenized_tweet[i] = ' '.join(tokenized_tweet[i])
-#         tweets_pre = tokenized_tweet    
-#     return tweets_pre

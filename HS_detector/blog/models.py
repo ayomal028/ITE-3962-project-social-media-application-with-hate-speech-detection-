@@ -7,6 +7,8 @@ from flask_login import UserMixin, current_user
 from sqlalchemy import CheckConstraint
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
+from flask_admin.actions import action
+# from flask_admin.model.actions import action
 
 #reloading a user from the session 
 #decorated function
@@ -47,7 +49,7 @@ class User(db.Model, UserMixin):
         return User.query.get(user_id)
 
     def __repr__(self):
-        return f"User('{self.username}', '{self.email}', '{self.image_file}')"
+        return f"User('{self.username}', '{self.email}')"
 
 
 class Post(db.Model):
@@ -92,6 +94,8 @@ class Reports(db.Model):
     
 
 class Controller(ModelView):
+    can_edit = False
+    column_exclude_list = ['password']
     def is_accessible(self):
         if current_user.is_authenticated:
             if current_user.is_admin == True:
@@ -102,6 +106,15 @@ class Controller(ModelView):
             return abort(404)
     def not_auth(self):
         return "You are not autherized to proceed further!"
+
+class CustomView(ModelView):
+    def get_actions(self):
+        # Get the default actions
+        actions = super().get_actions()
+        # Remove the 'edit' action
+        actions.pop("edit", None)
+        return actions
+
 
 
 admin.add_view(Controller(User, db.session))

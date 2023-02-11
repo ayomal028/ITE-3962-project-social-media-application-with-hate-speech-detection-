@@ -1,5 +1,5 @@
 from blog import app
-from flask import render_template, url_for, flash, redirect, request, Blueprint
+from flask import render_template, url_for, flash, redirect, request, Blueprint, jsonify
 from blog import  db, bcrypt
 from blog.users.forms import RegistrationForm, LoginForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm, SearchForm
 from blog.models import User, Post, Comment, Like
@@ -222,14 +222,32 @@ def delete_comment(comment_id):
     return redirect(url_for('main.home'))
 
 #Like posts
-@users.route("/like-post/<post_id>", methods =["GET"] )
+# @users.route("/like-post/<post_id>", methods =["GET"] )
+# @login_required
+# def like(post_id):
+#     post = Post.query.filter_by(id=post_id)
+#     like = Like.query.filter_by(author=current_user, post_id=post_id).first()
+
+#     if not post:
+#         flash('Post does not exists', 'warning')
+#     elif like:
+#         db.session.delete(like)
+#         db.session.commit()
+#     else:
+#         like = Like(author=current_user, post_id=post_id)
+#         db.session.add(like)
+#         db.session.commit()
+
+#     return redirect(url_for('main.home'))
+
+@users.route("/like-post/<post_id>", methods =["POST"] )
 @login_required
 def like(post_id):
-    post = Post.query.filter_by(id=post_id)
+    post = Post.query.filter_by(id=post_id).first()
     like = Like.query.filter_by(author=current_user, post_id=post_id).first()
 
     if not post:
-        flash('Post does not exists', 'warning')
+        return jsonify({'error': 'post does not exist'}, 400)
     elif like:
         db.session.delete(like)
         db.session.commit()
@@ -238,7 +256,7 @@ def like(post_id):
         db.session.add(like)
         db.session.commit()
 
-    return redirect(url_for('main.home'))
+    return jsonify({"likes":len(post.likes), "liked":current_user in map(lambda x: x.author, post.likes)})
 
 
 

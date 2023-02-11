@@ -21,20 +21,29 @@
 
              <!-- like button -->
              <div>
+                <span id="likes-count-{{post.id}}">{{post.likes|length}}</span>
+                {% if current_user in post.likes|map(attribute="author")|list %}
+                    <i class="fa-solid fa-thumbs-up fa-2x" id="likes-button-{{post.id}}" onclick="like({{post.id}})"></i></a>
+                {% else %}
+                    <i class="fa-regular fa-thumbs-up fa-2x" id="likes-button-{{post.id}}" onclick="like({{post.id}})"></i></a> 
+                {% endif %}
+            </div>
+
+             <!-- <div>
                 {{post.likes|length}}
                 {% if current_user in post.likes|map(attribute="author")|list %}
                     <a href="/like-post/{{post.id}}"><i class="fa-solid fa-thumbs-up"></i></a>
                 {% else %}
                     <a href="/like-post/{{post.id}}"><i class="fa-regular fa-thumbs-up"></i></a> 
                 {% endif %}
-            </div>
+            </div> -->
 
             <!-- display comments -->
             <!-- expand/collapse the comments for the specific post -->
             <div class="collapse" id="comments-{{post.id}}">
                  <div class="card card-body" id="comments-expanded-{{post.id}}">
                     {% for comment in post.comments %}
-                        <div class="d-flex flex-start justify-content-between align-items-center">
+                        <div class="">
                             <div>
                                 <a href="{{url_for('users.user_posts', username=comment.author.username )}}" class="uname">{{comment.author.username}}</a>: {{comment.text}}
                             </div>
@@ -54,7 +63,7 @@
                                     </div>
                                 {% endif %}
                             </div>
-                        </div>
+                        </div><br>
                     {% endfor %}
                 </div>
             </div>

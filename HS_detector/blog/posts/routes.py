@@ -3,9 +3,12 @@ from blog import db
 from blog.posts.forms import PostForm
 from blog.models import Post, Reports
 from flask_login import current_user,login_required
-from blog.posts.utils import save_picture
+from blog.posts.utils import save_picture, get_picture_path
 from flask_mail import Message
-from blog.finalmodel import get_predictions
+from blog.finalmodel import get_predictions, ocr
+from PIL import Image
+import cv2
+import numpy as np
 
 
 
@@ -21,10 +24,14 @@ def new_post():
             picture_file = save_picture(form.picture.data)
             checktitle = get_predictions(request.form['title'])
             checkcontent = get_predictions(request.form['content'])
+            
+            # picture_path = get_picture_path(form.picture.data)
+            # pictureText = ocr(picture_path)
+            # checkImage = get_predictions(pictureText)
 
-            if(checktitle == 0 or checkcontent == 0):
+            if(checktitle == 0 or checkcontent == 0 ):
                 flash("It looks like you are trying to submit hateful content. We are strictly against online hate speech", 'danger')
-            elif(checktitle == 1 or checkcontent == 1):
+            elif(checktitle == 1 or checkcontent == 1 ):
                 flash("We strongly recommend not to post offensive content to our platform", 'warning')
                 post = Post(title=form.title.data, content=form.content.data, post_image=picture_file, author=current_user)
                 db.session.add(post)
