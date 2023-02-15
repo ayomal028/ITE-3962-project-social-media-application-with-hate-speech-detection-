@@ -25,12 +25,12 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
-    posts = db.relationship('Post', backref='author', lazy=True) 
+    posts = db.relationship('Post', backref='author', lazy=True, cascade="all, delete") 
     #posts attribute sets the relationship with the Post table(1 to many)
-    comments = db.relationship('Comment', backref='author', lazy=True)
+    comments = db.relationship('Comment', backref='author', lazy=True, cascade="all, delete")
     is_admin = db.Column(db.Boolean, default=False)
-    likes = db.relationship('Like', backref='author', lazy=True)
-    reports = db.relationship('Reports', backref='author', lazy=True)
+    likes = db.relationship('Like', backref='author', lazy=True, cascade="all, delete")
+    reports = db.relationship('Reports', backref='author', lazy=True, cascade="all, delete")
 
     #setting a secret key with an expiration time and returing a token 
     def get_reset_token(self, expires_sec=1800):
@@ -60,12 +60,12 @@ class Post(db.Model):
     content = db.Column(db.Text, nullable=False)
     post_image = db.Column(db.String(200), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    comments = db.relationship('Comment', backref='post', lazy=True)
+    comments = db.relationship('Comment', backref='post', lazy=True, cascade="all, delete")
     # is_offensive = db.Column(db.Boolean, default=False)
     # is_clean = db.Column(db.Boolean, default=False)
-    likes = db.relationship('Like', backref='Post', lazy=True)
+    likes = db.relationship('Like', backref='Post', lazy=True, cascade="all, delete")
     hate_percentage = db.Column(db.Float, nullable=False, server_default='0.0')
-    reports = db.relationship('Reports', backref='Post', lazy=True)
+    reports = db.relationship('Reports', backref='Post', lazy=True, cascade="all, delete")
 
     def __repr__(self):
         return f"Post('{self.title}', '{self.date_posted}')"

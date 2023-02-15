@@ -26,8 +26,8 @@
             
             <h2 class="article-title font-weight-bold">{{ post.title }}</a></h2>
             {% if post.post_image %}
-                <div class="post-pic"><img src="{{url_for('static', filename = 'post_images/' + post.post_image)}}" alt="" height="auto" width="500px"></div>
                 <div><p class="article-content">{{ post.content }}</p></div>
+                <div class="post-pic"><img src="{{url_for('static', filename = 'post_images/' + post.post_image)}}" alt="" height="auto" width="500px"></div>
             {% else %}
                 <div><p class="article-content">{{ post.content }}</p></div>
             {% endif %}
