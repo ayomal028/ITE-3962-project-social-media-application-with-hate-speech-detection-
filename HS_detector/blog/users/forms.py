@@ -7,6 +7,8 @@ from blog.models import User
 
 
 #We can create Forms in flaskform using classes, then the classes will convert into html templates
+
+# registration form
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -26,6 +28,7 @@ class RegistrationForm(FlaskForm):
         if user:
             raise ValidationError('That email is already taken. Please choose a different email')
 
+# login form
 class LoginForm(FlaskForm):
     #username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -34,7 +37,7 @@ class LoginForm(FlaskForm):
     remember = BooleanField('Remember me')
     submit = SubmitField('Login')
 
-
+# Update account form
 class UpdateAccountForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -56,7 +59,7 @@ class UpdateAccountForm(FlaskForm):
                 raise ValidationError('That email is already taken. Please choose a different email')
 
 
-# form to reset password
+# form to request password reset
 class RequestResetForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Request Password Reset')
@@ -67,12 +70,14 @@ class RequestResetForm(FlaskForm):
         if user is None:
             raise ValidationError('There is no account with that email!')
 
+# password reset form
 class ResetPasswordForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Reset Password')
 
+# search form
 class SearchForm(FlaskForm):
     searched = StringField('search', validators=[DataRequired()])
     submit = SubmitField('Submit')

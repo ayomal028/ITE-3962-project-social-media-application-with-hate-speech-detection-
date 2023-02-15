@@ -23,6 +23,7 @@
                 </div>
             </div>
             
+            
             <h2 class="article-title font-weight-bold">{{ post.title }}</a></h2>
             {% if post.post_image %}
                 <div class="post-pic"><img src="{{url_for('static', filename = 'post_images/' + post.post_image)}}" alt="" height="auto" width="500px"></div>
@@ -32,15 +33,6 @@
             {% endif %}
 
             <!-- like button -->
-            <!-- <div>
-                {{post.likes|length}}
-                {% if current_user in post.likes|map(attribute="author")|list %}
-                    <a href="/like-post/{{post.id}}"><i class="fa-solid fa-thumbs-up"></i></a>
-                {% else %}
-                    <a href="/like-post/{{post.id}}"><i class="fa-regular fa-thumbs-up"></i></a> 
-                {% endif %}
-            </div> -->
-
             <div>
                 <span id="likes-count-{{post.id}}">{{post.likes|length}}</span>
                 {% if current_user in post.likes|map(attribute="author")|list %}
@@ -51,7 +43,6 @@
             </div>
 
             <!-- display comments -->
-            <!-- {% for comment in post.comments%} {{ comment.text }} {% endfor %} -->
             <!-- expand/collapse the comments for the specific post -->
             <div class="collapse" id="comments-{{post.id}}">
                 <div class="card card-body" id="comments-expanded-{{post.id}}">
@@ -107,7 +98,7 @@
             
     </article>  
 
-    <!-- Modal -->
+    <!--delete post Modal -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog">
         <div class="modal-content">
@@ -161,6 +152,7 @@
         </div>
         </div>
     </div>
+
 {% endblock content %}
     
 <!-- <i class="bi bi-pencil-square">

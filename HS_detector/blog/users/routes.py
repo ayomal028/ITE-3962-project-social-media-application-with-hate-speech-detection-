@@ -36,7 +36,7 @@ def create_admin():
         user = User(username=form.username.data, email=form.email.data, password=hashed_password, is_admin=True)
         db.session.add(user)
         db.session.commit()
-        flash(f'Admin account has been created! You are now able to login', 'success')
+        flash(f'Admin account has been created! You are now able to login as an admin', 'success')
         return redirect(url_for('users.login'))
     return render_template('admin_register.html', form=form)
 
@@ -59,7 +59,7 @@ def login():
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', title='Login', form=form)
 
-
+#logout route
 @users.route("/logout")
 def logout():
     logout_user()
@@ -142,18 +142,6 @@ def reset_token(token):
     return render_template('change_password.html', title='Password Reset', form=form)
 
 
-# #search
-# @users.route('/search', methods=['POST'])
-# def search():
-#     form = SearchForm()
-#     posts = Post.query
-#     if form.validate_on_submit():
-#         searched = form.searched.data
-#         #query the database for posts
-#         posts = posts.filter(Post.content.like('%' + searched + '%'))
-#         posts = posts.order_by(Post.title).all()
-#         return render_template("search.html", form=form, searched=searched, posts=posts)
-
 #search function
 @users.route('/search', methods=['POST'])
 def search():
@@ -213,7 +201,7 @@ def delete_comment(comment_id):
 
     if not comment:
         flash('there is no such comment', category='error')
-    elif current_user.id != comment.user_id and current_user.id != comment.post.post_id:
+    elif current_user.id != comment.user_id and current_user.id != comment.post.user_id:
         flash('you do not have permission to delete comments', category='error')
     else:
         db.session.delete(comment)
@@ -221,25 +209,8 @@ def delete_comment(comment_id):
     
     return redirect(url_for('main.home'))
 
-#Like posts
-# @users.route("/like-post/<post_id>", methods =["GET"] )
-# @login_required
-# def like(post_id):
-#     post = Post.query.filter_by(id=post_id)
-#     like = Like.query.filter_by(author=current_user, post_id=post_id).first()
 
-#     if not post:
-#         flash('Post does not exists', 'warning')
-#     elif like:
-#         db.session.delete(like)
-#         db.session.commit()
-#     else:
-#         like = Like(author=current_user, post_id=post_id)
-#         db.session.add(like)
-#         db.session.commit()
-
-#     return redirect(url_for('main.home'))
-
+# like posts route
 @users.route("/like-post/<post_id>", methods =["POST"] )
 @login_required
 def like(post_id):
@@ -260,5 +231,34 @@ def like(post_id):
 
 
 
+# #search
+# @users.route('/search', methods=['POST'])
+# def search():
+#     form = SearchForm()
+#     posts = Post.query
+#     if form.validate_on_submit():
+#         searched = form.searched.data
+#         #query the database for posts
+#         posts = posts.filter(Post.content.like('%' + searched + '%'))
+#         posts = posts.order_by(Post.title).all()
+#         return render_template("search.html", form=form, searched=searched, posts=posts)
 
+#Like posts
+# @users.route("/like-post/<post_id>", methods =["GET"] )
+# @login_required
+# def like(post_id):
+#     post = Post.query.filter_by(id=post_id)
+#     like = Like.query.filter_by(author=current_user, post_id=post_id).first()
+
+#     if not post:
+#         flash('Post does not exists', 'warning')
+#     elif like:
+#         db.session.delete(like)
+#         db.session.commit()
+#     else:
+#         like = Like(author=current_user, post_id=post_id)
+#         db.session.add(like)
+#         db.session.commit()
+
+#     return redirect(url_for('main.home'))
 
