@@ -32,15 +32,6 @@
                     {% endif %}
                 </div>
 
-                <!-- <div>
-                        {{post.likes|length}}
-                        {% if current_user in post.likes|map(attribute="author")|list %}
-                            <a href="/like-post/{{post.id}}"><i class="fa-solid fa-thumbs-up"></i></a>
-                        {% else %}
-                            <a href="/like-post/{{post.id}}"><i class="fa-regular fa-thumbs-up"></i></a> 
-                        {% endif %}
-                </div> -->
-
                 <!-- display comments -->
                 <!-- expand/collapse the comments for the specific post -->
                 <div class="collapse" id="comments-{{post.id}}">

@@ -95,7 +95,7 @@ class Reports(db.Model):
 
 class Controller(ModelView):
     can_edit = False
-    column_exclude_list = ['password']
+    column_exclude_list = ['password', 'post_image', 'image_file', 'hate_percentage']
     def is_accessible(self):
         if current_user.is_authenticated:
             if current_user.is_admin == True:
@@ -107,13 +107,6 @@ class Controller(ModelView):
     def not_auth(self):
         return "You are not autherized to proceed further!"
 
-class CustomView(ModelView):
-    def get_actions(self):
-        # Get the default actions
-        actions = super().get_actions()
-        # Remove the 'edit' action
-        actions.pop("edit", None)
-        return actions
 
 
 
